@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OrbitGuard · Prototype Lab</title>
+<style>
+:root{color-scheme:dark;--bg:#101922;--card:#172938;--ink:#eff8fb;--muted:#bfced8;--mint:#9bead6;--rule:#466074}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.58 system-ui,sans-serif}main{width:min(1040px,93%);margin:34px auto}header{border-bottom:1px solid var(--rule);margin-bottom:24px}h1{font:700 clamp(2rem,6vw,4.3rem)/1.02 Georgia,serif;margin:0 0 12px}header p,p{margin:0 0 14px}h2{font-size:1.25rem;margin:0 0 9px}.grid{display:grid;grid-template-columns:1.15fr 1fr;gap:16px}.card{background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:18px;margin-bottom:16px}.inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:13px}label{display:grid;gap:4px;font-weight:650;font-size:.9rem}small,.muted{color:var(--muted);font-weight:400}input{background:#102030;color:var(--ink);min-height:43px;border:1px solid #7897a8;border-radius:6px;padding:7px;width:100%;font:inherit}.result{border-left:4px solid var(--mint);padding:9px 13px;margin-top:17px;background:#10232a}.result strong{font-size:1.28rem;color:var(--mint)}a{color:var(--mint)}ol{padding-left:24px}li{margin:6px 0}table{border-collapse:collapse;width:100%;margin:11px 0}th,td{text-align:left;padding:7px;border-bottom:1px solid var(--rule)}table input{max-width:140px}button{color:#132823;background:var(--mint);font:inherit;font-weight:700;padding:9px 12px;border:0;border-radius:6px;cursor:pointer}button:disabled{opacity:.5}@media(max-width:740px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body><main>
+<header><h1>OrbitGuard Prototype Lab</h1><p>Can the cover shut in time, and how much cooling time is left?</p></header>
+<div class="grid">
+<section class="card">
+<h2>Landing timing check</h2>
+<p class="muted">The defaults combine an Apollo 12 observation with illustrative warning, delay, and margin values. For your tabletop test, replace them with your own scenario and measured cover time.</p>
+<div class="inputs">
+<label>Warning before touchdown (s)<input id="warning" type="number" min="0" step="any" value="60"></label>
+<label>Expected dust at robot before touchdown (s)<input id="dust" type="number" step="any" value="52"><small>A negative value means dust arrives after touchdown.</small></label>
+<label>Command delay (s)<input id="delay" type="number" min="0" step="any" value="1"></label>
+<label>Cover closing time (s)<input id="close" type="number" min="0" step="any" value="2"></label>
+<label>Extra margin (s)<input id="margin" type="number" min="0" step="any" value="0"></label>
+</div>
+<div class="result" id="timing" role="status"></div>
+<p class="muted" style="margin:12px 0 0">Assumes the cover is open when the warning arrives, or that opening time is negligible. If it starts closed, budget opening time as well. This calculation gives time available for cooling, without predicting the temperature change.</p>
+</section>
+<section class="card">
+<h2>What the public data measures</h2>
+<ol>
+<li><strong>Cover movement.</strong> A NASA-funded team reported opening and closing in under two seconds during lab tests. Use two seconds as an illustrative budget, then measure your own flap. <a href="https://ntrs.nasa.gov/citations/20260007321">Louver test report</a></li>
+<li><strong>Visible dust.</strong> Apollo 12 photographs showed dust 52 seconds before touchdown. Blue Ghost footage showed plume–surface interaction at about 15 meters altitude. Neither observation gives dust arrival time at a particular nearby robot. <a href="https://ntrs.nasa.gov/api/citations/20060050035/downloads/20060050035.pdf">Apollo analysis</a> · <a href="https://www.nasa.gov/general/nasa-cameras-on-blue-ghost-capture-first-of-its-kind-moon-landing-footage/">Blue Ghost video</a></li>
+<li><strong>Temperature.</strong> LISTER provides separate lunar subsurface data. Your mock-up needs its own electronics-temperature measurements. <a href="https://pds.nasa.gov/ds-view/pds/viewCollection.jsp?identifier=urn%3Anasa%3Apds%3Aclps_to_19d_lister%3Adata&amp;version=1.0">LISTER archive</a></li>
+</ol>
+</section>
+</div>
+<section class="card">
+<h2>Build the tabletop scene</h2>
+<p><strong>Materials:</strong> Two small cardboard boxes, foil, tape, a phone, and a dark backdrop. Label one box “Lunar robot” and the other “Lander.” Give the robot a front foil panel and a top-hinged cardboard flap. Mark “Dust reaches robot” with a colored paper card.</p>
+<ol>
+<li><strong>Time the cover.</strong> Film the flap from the side. Time from its first movement until fully shut. Repeat three times and enter the slowest time above.</li>
+<li><strong>Replay the landing.</strong> In the 60-second example, show the warning at 0 s, start moving the flap no later than 6 s, show the dust card at 8 s, and mark touchdown at 60 s. Use a stopwatch. This is an illustrative replay that treats the Apollo observation as a stand-in for dust at the robot.</li>
+<li><strong>Measure cooling separately.</strong> Put a covered mug of warm tap water inside the robot box with a thermometer probe in the water. In the first run, leave the flap open before the marked dust event. In the second run, leave it closed during preparation. Give both runs the same starting temperature, water volume, and timing. Close the flap for the simulated dust event and reopen afterward in both runs. Record the temperature at the same points in each run.</li>
+</ol>
+<p class="muted">The cardboard scene demonstrates motion, timing, and cooling in air. A longer tabletop run can make temperature differences easier to measure. Treat it as a separate test rather than stretching the historical landing timeline.</p>
+</section>
+<section class="card">
+<h2>Record your measured temperatures</h2>
+<p class="muted">Log your actual readings in °C. If a short run produces little measurable change, keep that result.</p>
+<table><thead><tr><th scope="col">Measurement</th><th scope="col">Pre-cool run</th><th scope="col">Comparison run</th></tr></thead><tbody>
+<tr><th scope="row">Start of preparation</th><td><input class="reading" aria-label="Start, Pre-Cool" type="number" step="any"></td><td><input class="reading" aria-label="Start, comparison" type="number" step="any"></td></tr>
+<tr><th scope="row">Just before dust</th><td><input class="reading" aria-label="Before dust, Pre-Cool" type="number" step="any"></td><td><input class="reading" aria-label="Before dust, comparison" type="number" step="any"></td></tr>
+<tr><th scope="row">End of dust</th><td><input class="reading" aria-label="End of dust, Pre-Cool" type="number" step="any"></td><td><input class="reading" aria-label="End of dust, comparison" type="number" step="any"></td></tr>
+<tr><th scope="row">After reopening</th><td><input class="reading" aria-label="After reopening, Pre-Cool" type="number" step="any"></td><td><input class="reading" aria-label="After reopening, comparison" type="number" step="any"></td></tr>
+</tbody></table>
+<button type="button" id="download" disabled>Download temperature readings</button>
+</section>
+</main>
+<script>
+const fields = ['warning','dust','delay','close','margin'].map(id => document.getElementById(id));
+const timing = document.getElementById('timing');
+const format = n => Number(n.toFixed(2)).toString();
+function update(){
+  const [warning,dust,delay,close,margin] = fields.map(field => field.valueAsNumber);
+  if(![warning,dust,delay,close,margin].every(Number.isFinite) || [warning,delay,close,margin].some(n=>n<0)){
+    timing.textContent='Enter a number in every field. Only dust timing can be negative.';
+    return;
+  }
+  const timeToDust=warning-dust, remaining=timeToDust-delay-close-margin;
+  const message=document.createElement('strong');
+  const detail=document.createElement('div');
+  message.textContent=remaining>=0 ? format(remaining)+' s available for pre-cooling' : 'Cover misses the deadline by '+format(-remaining)+' s';
+  detail.textContent=timeToDust<0
+    ? 'Dust is expected before the warning. Use an earlier warning or a cover already in the closed position.'
+    : format(timeToDust)+' s from warning to expected dust, minus '+format(delay+close+margin)+' s for command, closing, and margin.';
+  timing.replaceChildren(message,detail);
+}
+fields.forEach(field=>field.addEventListener('input',update));update();
+const stages=['Start of preparation','Just before dust','End of dust','After reopening'];
+const readings=[...document.querySelectorAll('.reading')];
+const download=document.getElementById('download');
+readings.forEach(field=>field.addEventListener('input',()=>{download.disabled=!readings.some(f=>Number.isFinite(f.valueAsNumber));}));
+download.addEventListener('click',()=>{
+ const csv=['Stage,Pre-Cool (deg C),Comparison (deg C)',...stages.map((stage,i)=>[stage,...readings.slice(i*2,i*2+2).map(f=>Number.isFinite(f.valueAsNumber)?f.valueAsNumber:'')].join(','))].join('\r\n');
+ const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+ const link=document.createElement('a');link.href=url;link.download='OrbitGuard_Prototype_Readings.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+</script></body></html>
